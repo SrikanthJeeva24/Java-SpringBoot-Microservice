@@ -4,16 +4,18 @@ server:
 spring:
   cloud:
     gateway:
-      routes:
-        - id: user-service
-          uri: lb://USER-SERVICE
-          predicates:
-            - Path=/users/**
+      server:
+        webmvc:
+          routes:
+            - id: user-service
+              uri: lb://USER-SERVICE
+              predicates:
+                - Path=/api/auth/**,/api/users/**
 
-        - id: job-service
-          uri: lb://JOB-SERVICE
-          predicates:
-            - Path=/jobs/**
+            - id: job-service
+              uri: lb://JOB-SERVICE
+              predicates:
+                - Path=/api/jobs/**
 
 eureka:
   client:

@@ -23,4 +23,7 @@ public class JobRequestDTO {
 
     @NotBlank(message = "Skills Required Cannot be Empty")
     private String skillsRequired;
+
+    @NotNull
+    private Long createdBy;
 }

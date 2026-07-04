@@ -48,5 +48,9 @@ public class JobEntity {
     @Column(name = "updated_at")
     private LocalDateTime updatedAt;
 
+    @Column(name = "created_by", nullable = false)
+    private Long createdBy;
+
 }
+
 

@@ -1,11 +1,14 @@
 package com.sri.job_service.service;
 
+import com.sri.job_service.client.UserClient;
 import com.sri.job_service.common.exception.DuplicateResourceException;
 import com.sri.job_service.common.exception.ResourceNotFoundException;
 import com.sri.job_service.dto.JobRequestDTO;
 import com.sri.job_service.dto.JobResponseDTO;
+import com.sri.job_service.dto.UserDTO;
 import com.sri.job_service.entity.JobEntity;
 import com.sri.job_service.repository.JobRepository;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -14,11 +17,12 @@ import java.util.List;
 public class JobServiceImpl  implements JobService {
 
     private final JobRepository jobRepository;
+    private final UserClient userClient;
 
-    public JobServiceImpl(JobRepository jobRepository) {
+    public JobServiceImpl(JobRepository jobRepository, UserClient userClient) {
         this.jobRepository = jobRepository;
+        this.userClient = userClient;
     }
-
     @Override
     public JobResponseDTO createJob(
             JobRequestDTO request) {
@@ -43,6 +47,13 @@ public class JobServiceImpl  implements JobService {
         job.setLocation(request.getLocation());
         job.setSalary(request.getSalary());
         job.setSkillsRequired(request.getSkillsRequired());
+        job.setCreatedBy(request.getCreatedBy());
+
+        UserDTO user = userClient.getUserById(request.getCreatedBy());
+
+        if(user == null){
+            throw new ResourceNotFoundException("User not found");
+        }
 
         JobEntity savedJob =
                 jobRepository.save(job);
